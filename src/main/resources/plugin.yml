@@ -1,0 +1,8 @@
+name: JSkills
+main: com.driga.jskills.JSkills
+version: 1.3
+authors: [Jusai]
+website: https://github.com/Rodriga0
+commands:
+  jskills:
+  skills:
