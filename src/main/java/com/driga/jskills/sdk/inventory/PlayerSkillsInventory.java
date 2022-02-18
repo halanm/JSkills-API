@@ -52,7 +52,7 @@ public class PlayerSkillsInventory extends InventorySustainer {
         "§bCusto: §a" + skillProvider.getUnlockCost(quirk.getSkill1(), hero) + " TP",
         "§fClique para Melhorar essa skill"),
         e ->{
-            if(heroProvider.getTP(hero) < skillProvider.getUnlockCost(quirk.getSkill1(), hero)){
+            if(heroProvider.getDataInt(hero, "tp") < skillProvider.getUnlockCost(quirk.getSkill1(), hero)){
                 player.sendMessage("§cVocê não tem TP Suficiente");
                 player.closeInventory();
             }else{
@@ -60,7 +60,7 @@ public class PlayerSkillsInventory extends InventorySustainer {
                     String heroName = hero.getName();
                     int cost = skillProvider.getUnlockCost(quirk.getSkill1(), hero);
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "jrmctp -" + cost + " " + heroName);
-                    player.playSound(player.getLocation(), Sound.SUCCESSFUL_HIT, 0.1f, 0.1f);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_CHIME, 0.1f, 0.1f);
                     new HeroChangeSkillLevelEvent(hero, quirk.getSkill1(), hero.getSkillLevel(1) + 1);
                 }else{
                     player.sendMessage("§cEssa Skill já está no Level Máximo");
@@ -76,7 +76,7 @@ public class PlayerSkillsInventory extends InventorySustainer {
         "§bCusto: §a" + skillProvider.getUnlockCost(quirk.getSkill2(), hero) + " TP",
          "§fClique para Melhorar essa skill"),
         e ->{
-            if(heroProvider.getTP(hero) < skillProvider.getUnlockCost(quirk.getSkill2(), hero)){
+            if(heroProvider.getDataInt(hero, "tp") < skillProvider.getUnlockCost(quirk.getSkill2(), hero)){
                 player.sendMessage("§cVocê não tem TP Suficiente");
                 player.closeInventory();
             }else{
@@ -84,7 +84,7 @@ public class PlayerSkillsInventory extends InventorySustainer {
                     String heroName = hero.getName();
                     int cost = skillProvider.getUnlockCost(quirk.getSkill2(), hero);
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "jrmctp -" + cost + " " + heroName);
-                    player.playSound(player.getLocation(), Sound.SUCCESSFUL_HIT, 0.1f, 0.1f);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_CHIME, 0.1f, 0.1f);
                     new HeroChangeSkillLevelEvent(hero, quirk.getSkill2(), hero.getSkillLevel(2) + 1);
                 }else{
                     player.sendMessage("§cEssa Skill já está no Level Máximo");
@@ -100,7 +100,7 @@ public class PlayerSkillsInventory extends InventorySustainer {
         "§bCusto: §a" + skillProvider.getUnlockCost(quirk.getSkill3(), hero) + " TP",
         "§fClique para Melhorar essa skill"),
         e ->{
-            if(heroProvider.getTP(hero) < skillProvider.getUnlockCost(quirk.getSkill3(), hero)){
+            if(heroProvider.getDataInt(hero, "tp") < skillProvider.getUnlockCost(quirk.getSkill3(), hero)){
                 player.sendMessage("§cVocê não tem TP Suficiente");
                 player.closeInventory();
             }else{
@@ -108,7 +108,7 @@ public class PlayerSkillsInventory extends InventorySustainer {
                     String heroName = hero.getName();
                     int cost = skillProvider.getUnlockCost(quirk.getSkill3(), hero);
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "jrmctp -" + cost + " " + heroName);
-                    player.playSound(player.getLocation(), Sound.SUCCESSFUL_HIT, 0.1f, 0.1f);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_CHIME, 0.1f, 0.1f);
                     new HeroChangeSkillLevelEvent(hero, quirk.getSkill3(), hero.getSkillLevel(3) + 1);
                 }else{
                     player.sendMessage("§cEssa Skill já está no Level Máximo");

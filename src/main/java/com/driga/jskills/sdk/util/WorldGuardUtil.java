@@ -7,7 +7,7 @@ import org.bukkit.Location;
 
 public class WorldGuardUtil {
     public static boolean canFlag(Location loc, StateFlag flag){
-        val out = WGBukkit.getPlugin().getRegionManager(loc.getWorld()).getApplicableRegions(loc).queryState(null, flag);
+        StateFlag.State out = WGBukkit.getPlugin().getRegionManager(loc.getWorld()).getApplicableRegions(loc).queryState(null, flag);
         if(out==null)
             return false;
         return !String.valueOf(out).equalsIgnoreCase("DENY");

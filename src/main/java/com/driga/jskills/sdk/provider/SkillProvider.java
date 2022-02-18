@@ -7,7 +7,7 @@ import com.driga.jskills.api.prototype.Hero;
 import com.driga.jskills.api.prototype.Quirk;
 import com.driga.jskills.api.prototype.Skill;
 import com.driga.jskills.sdk.JSkillsAPI;
-import me.dpohvar.powernbt.api.NBTManager;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -18,7 +18,6 @@ import java.util.List;
 public class SkillProvider {
 
     private static SkillProvider skillProvider;
-    private NBTManager manager;
     private ConfigurationSection section;
     private HeroProvider heroProvider;
     private QuirkRepository quirkRepository;
@@ -62,7 +61,7 @@ public class SkillProvider {
         int index = getSkillIndex(skill, hero.getQuirk());
         int level = hero.getSkillLevel(index);
         ConfigurationSection skillLevelSection = skillSection.getConfigurationSection("LVL" + level);
-        double multiplier = heroProvider.getWil(hero);
+        double multiplier = heroProvider.getDataInt(hero, getAttribute(skill, hero));
         double damage = skillLevelSection.getDouble("DMG") * multiplier;
         return damage;
     }
@@ -78,7 +77,7 @@ public class SkillProvider {
         int index = getSkillIndex(skill, hero.getQuirk());
         int level = hero.getSkillLevel(index);
         ConfigurationSection skillLevelSection = skillSection.getConfigurationSection("LVL" + level);
-        double multiplier = heroProvider.getWil(hero);
+        double multiplier = heroProvider.getDataInt(hero, getAttribute(skill, hero));
         double value = skillLevelSection.getInt("Value") * multiplier;
         return value;
     }
@@ -188,6 +187,18 @@ public class SkillProvider {
         return lore;
     }
 
+    public String getAttribute(Skill skill, Hero hero){
+        String quirk = hero.getQuirk();
+        String skillName = skill.getName();
+        if(!section.contains(quirk)) return null;
+        ConfigurationSection quirkSection = section.getConfigurationSection(quirk);
+        if(!quirkSection.contains(skillName)) return null;
+        ConfigurationSection skillSection = quirkSection.getConfigurationSection(skillName);
+        if(getSkillIndex(skill, hero.getQuirk()) == 0) return null;
+        int index = getSkillIndex(skill, hero.getQuirk());
+        return skillSection.getString("Attribute");
+    }
+
     public Integer getSkillIndex(Skill skill, String quirkName){
         Quirk quirk = JSkillsAPI.getInstance().getQuirks().find(quirkName);
         if(skill.getName().equals(quirk.getSkill1().getName())) return 1;
@@ -213,9 +224,10 @@ public class SkillProvider {
             section = JSkills.getInstance().getConfigManager().getConfig().createSection("Skills");
             ConfigurationSection quirkSection = section.createSection(quirk.getName());
             for(String skillName : skillList){
+                Skill skill = getSkillByName(skillName, quirk);
                 ConfigurationSection skillSection = quirkSection.createSection(skillName);
+                skillSection.set("Attribute", "str");
                 for(int i = 0; i <= 5; i++){
-                    Skill skill = getSkillByName(skillName, quirk);
                     ConfigurationSection skillLevelSection = skillSection.createSection("LVL" + i);
                     skillLevelSection.set("UnlockCost", 0);
                     if(skill.getType().equals("EFFECT")){
@@ -244,9 +256,10 @@ public class SkillProvider {
         if(section != null && !section.contains(quirk.getName())){
             ConfigurationSection quirkSection = section.createSection(quirk.getName());
             for(String skillName : skillList){
+                Skill skill = getSkillByName(skillName, quirk);
                 ConfigurationSection skillSection = quirkSection.createSection(skillName);
+                skillSection.set("Attribute", "str");
                 for(int i = 0; i <= 5; i++){
-                    Skill skill = getSkillByName(skillName, quirk);
                     ConfigurationSection skillLevelSection = skillSection.createSection("LVL" + i);
                     skillLevelSection.set("UnlockCost", 0);
                     if(skill.getType().equals("EFFECT")){
@@ -320,11 +333,13 @@ public class SkillProvider {
         for(String key : skills){
             ConfigurationSection skillSection = quirkSection.getConfigurationSection(key);
             for(String lvl : skillSection.getKeys(false)){
-                String name = skillSection.getConfigurationSection(lvl).getString("ItemName");
-                name = name.replaceAll("&", "§");
-                if(itemName.equals(name)){
-                    Quirk quirk = quirkRepository.find(hero.getQuirk());
-                    return getSkillByName(key, quirk);
+                if(!lvl.equals("Attribute")){
+                    String name = skillSection.getConfigurationSection(lvl).getString("ItemName");
+                    name = name.replaceAll("&", "§");
+                    if(itemName.equals(name)){
+                        Quirk quirk = quirkRepository.find(hero.getQuirk());
+                        return getSkillByName(key, quirk);
+                    }
                 }
             }
         }

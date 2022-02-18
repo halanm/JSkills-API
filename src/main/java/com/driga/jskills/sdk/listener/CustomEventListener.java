@@ -56,13 +56,13 @@ public class CustomEventListener implements Listener {
 
         Damageable damageable = (Damageable) entity;
         double damage = skillProvider.getDamage(skill, hero);
-        int currentRelease = heroProvider.getRelease(hero);
-        int currentStamina = heroProvider.getStamina(hero);
 
-        heroProvider.setRelease(hero, 0);
-        damageable.damage(damage, hero.getPlayer());
-        heroProvider.setRelease(hero, currentRelease);
-        heroProvider.setStamina(hero, currentStamina);
+        if(entity instanceof Player){
+            Player vitim = (Player) entity;
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "dardano " + damage + " " + vitim.getName());
+        }else{
+            damageable.damage(damage, hero.getPlayer());
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -91,7 +91,7 @@ public class CustomEventListener implements Listener {
 
 
 
-        if(heroProvider.getEnergy(hero) < skillProvider.getEnergyCost(skill, hero)){
+        if(heroProvider.getDataDouble(hero, "sp") < skillProvider.getEnergyCost(skill, hero)){
             hero.getPlayer().sendMessage("§cVocê não tem Energia para usar essa Skill!");
             return;
         }
@@ -99,7 +99,7 @@ public class CustomEventListener implements Listener {
 
 
         String heroName = hero.getName();
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "jrmcheal energy -" + energy + " " + heroName);
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tirarsp " + energy + " " + heroName);
         cooldownManager.applyCooldown(hero, skillProvider.getCooldown(skill, hero), skill.getName());
 
         if(skill.getType().equals("EFFECT") || skill.getType().equals("BUFF")){
