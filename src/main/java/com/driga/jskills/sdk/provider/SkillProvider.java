@@ -112,18 +112,18 @@ public class SkillProvider {
         return skillLevelSection.getStringList("Commands");
     }
 
-    public Integer getEnergyCost(Skill skill, Hero hero){
+    public Double getEnergyCost(Skill skill, Hero hero){
         String quirk = hero.getQuirk();
         String skillName = skill.getName();
-        if(!section.contains(quirk)) return 0;
+        if(!section.contains(quirk)) return 0.0;
         ConfigurationSection quirkSection = section.getConfigurationSection(quirk);
-        if(!quirkSection.contains(skillName)) return 0;
+        if(!quirkSection.contains(skillName)) return 0.0;
         ConfigurationSection skillSection = quirkSection.getConfigurationSection(skillName);
-        if(getSkillIndex(skill, hero.getQuirk()) == 0) return 0;
+        if(getSkillIndex(skill, hero.getQuirk()) == 0) return 0.0;
         int index = getSkillIndex(skill, hero.getQuirk());
         int level = hero.getSkillLevel(index);
         ConfigurationSection skillLevelSection = skillSection.getConfigurationSection("LVL" + level);
-        return skillLevelSection.getInt("EnergyCost");
+        return skillLevelSection.getDouble("EnergyCost");
     }
 
     public Integer getCooldown(Skill skill, Hero hero){
@@ -231,7 +231,7 @@ public class SkillProvider {
                     ConfigurationSection skillLevelSection = skillSection.createSection("LVL" + i);
                     skillLevelSection.set("UnlockCost", 0);
                     if(skill.getType().equals("EFFECT")){
-                        skillLevelSection.set("DMG", 0);
+                        skillLevelSection.set("DMG", 0.0);
                     }
                     if(skill.getType().equals("BUFF")){
                         skillLevelSection.set("Value", 0);
@@ -240,7 +240,7 @@ public class SkillProvider {
                     if(skill.getType().equals("COMMAND")){
                         skillLevelSection.set("Commands", new String[]{"comando1", "comando2"});
                     }
-                    skillLevelSection.set("EnergyCost", 0);
+                    skillLevelSection.set("EnergyCost", 0.0);
                     skillLevelSection.set("Cooldown", 0);
                     skillLevelSection.set("ItemId", "381:0");
                     skillLevelSection.set("ItemName", "&6Exemplo de Nome de item");

@@ -9,6 +9,7 @@ import com.driga.jskills.api.prototype.Hero;
 import com.driga.jskills.api.prototype.Quirk;
 import com.driga.jskills.api.prototype.Skill;
 import com.driga.jskills.sdk.event.HeroChangeSkillLevelEvent;
+import com.driga.jskills.sdk.stat.StatManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -112,7 +113,6 @@ public class MainCommand implements CommandExecutor {
 
         if(args.length == 5){
             if(args[1].equalsIgnoreCase("level")){
-
                 if(args[0].equalsIgnoreCase("add")){
                     Player player = Bukkit.getPlayer(args[2]);
                     if(player == null){
@@ -197,6 +197,41 @@ public class MainCommand implements CommandExecutor {
                 }
 
             }
+            if(args[1].equalsIgnoreCase("stat")){
+                if(args[0].equalsIgnoreCase("set")){
+                    Player player = Bukkit.getPlayer(args[2]);
+                    Hero hero = heroRepository.find(player.getUniqueId());
+                    if(player == null){
+                        sender.sendMessage("§cPlayer não encontrado");
+                        return false;
+                    }
+                    String stat = args[3];
+                    String setString = args[4];
+                    if(setString.contains(".")){
+                        Double toSet = 0.0;
+                        try{
+                            toSet = Double.parseDouble(args[4]);
+                            StatManager.getInstance().setStatDouble(hero, stat, toSet);
+                            sender.sendMessage("§aAção concluida!");
+                            return false;
+                        }catch (NumberFormatException e){
+                            sender.sendMessage("§c'" + args[4] + "' não é um número válido");
+                            return false;
+                        }
+                    }else{
+                        Integer toSet = 0;
+                        try{
+                            toSet = Integer.parseInt(args[4]);
+                            StatManager.getInstance().setStatInt(hero, stat, toSet);
+                            sender.sendMessage("§aAção concluida!");
+                            return false;
+                        }catch (NumberFormatException e){
+                            sender.sendMessage("§c'" + args[4] + "' não é um número válido");
+                            return false;
+                        }
+                    }
+                }
+            }
         }
         sender.sendMessage(getCommandList());
         return false;
@@ -213,6 +248,8 @@ public class MainCommand implements CommandExecutor {
                 "§6/jskills remove level <Player> <Skill> <Quantia> §f=> Remove uma Quantia ao level de uma skill de um player",
                 "",
                 "§6/jskills set level <Player> <Skill> <Level> §f=> Muda o level de uma skill de um player",
+                "",
+                "§6/jskills set stat <Player> <Stat> <Valor> §f=> seta um stat de um player",
                 "",
                 "§6/jskills reset <Player> §f=> Seleciona uma nova Individualidade aleatória para um player e zera o level de todas as skills",
                 "",

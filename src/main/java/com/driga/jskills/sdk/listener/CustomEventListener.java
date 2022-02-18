@@ -90,12 +90,13 @@ public class CustomEventListener implements Listener {
         }
 
 
-
+        System.out.println(heroProvider.getDataDouble(hero, "sp"));
+        System.out.println(skillProvider.getEnergyCost(skill, hero));
         if(heroProvider.getDataDouble(hero, "sp") < skillProvider.getEnergyCost(skill, hero)){
             hero.getPlayer().sendMessage("§cVocê não tem Energia para usar essa Skill!");
             return;
         }
-        int energy = skillProvider.getEnergyCost(skill, hero);
+        double energy = skillProvider.getEnergyCost(skill, hero);
 
 
         String heroName = hero.getName();

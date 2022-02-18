@@ -1,6 +1,7 @@
 package com.driga.jskills.sdk.provider;
 
 import com.driga.jskills.api.prototype.Hero;
+import com.driga.jskills.sdk.stat.StatManager;
 import org.bukkit.entity.Entity;
 import org.bukkit.metadata.MetadataValue;
 
@@ -19,24 +20,12 @@ public class HeroProvider {
     }
 
     public int getDataInt(Hero hero, String key) {
-        if(hero.getPlayer().hasMetadata(key)){
-            return 0;
-        }
-        if(hero.getPlayer().getMetadata(key).get(0) == null){
-            return 0;
-        }
-        int value = hero.getPlayer().getMetadata(key).get(0).asInt();
+        int value = StatManager.getInstance().getStatInt(hero, key);
         return value;
     }
 
     public double getDataDouble(Hero hero, String key) {
-        if(hero.getPlayer().hasMetadata(key)){
-            return 0.0;
-        }
-        if(hero.getPlayer().getMetadata(key).get(0) == null){
-            return 0.0;
-        }
-        double value = hero.getPlayer().getMetadata(key).get(0).asDouble();
+        double value = StatManager.getInstance().getStatDouble(hero, key);
         return value;
     }
 
