@@ -14,7 +14,7 @@ With Maven:
 <dependencies>
     <dependency>
         <groupId>com.github.Rodriga0</groupId>
-	<artifactId>JSkills</artifactId>
+	<artifactId>JSkills-API</artifactId>
 	<version>1.0</version>
     </dependency>
 </dependencies>
@@ -27,7 +27,7 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 dependencies {
-    compileOnly "com.github.Rodriga0:JSkills:1.0"
+    compileOnly "com.github.Rodriga0:JSkills-API:1.0"
 }
 ```
 

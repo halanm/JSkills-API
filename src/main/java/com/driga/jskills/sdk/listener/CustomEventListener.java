@@ -11,14 +11,21 @@ import com.driga.jskills.sdk.provider.SkillProvider;
 import com.driga.jskills.sdk.repository.QuirkRepository;
 import com.driga.jskills.sdk.provider.HeroProvider;
 import com.driga.jskills.sdk.util.WorldGuardUtil;
+import com.driga.jstatscore.api.JStatsCoreAPI;
+import com.driga.jstatscore.api.prototype.Attribute;
+import com.driga.jstatscore.api.prototype.Subject;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 
 public class CustomEventListener implements Listener {
 
@@ -53,16 +60,10 @@ public class CustomEventListener implements Listener {
             if(!(entity instanceof Player))
                 return;
         }
-
-        Damageable damageable = (Damageable) entity;
         double damage = skillProvider.getDamage(skill, hero);
 
-        if(entity instanceof Player){
-            Player vitim = (Player) entity;
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "dardano " + damage + " " + vitim.getName());
-        }else{
-            damageable.damage(damage, hero.getPlayer());
-        }
+        Event e = new EntityDamageByEntityEvent(p, entity, EntityDamageEvent.DamageCause.CUSTOM, damage);
+        Bukkit.getPluginManager().callEvent(e);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -72,6 +73,7 @@ public class CustomEventListener implements Listener {
         }
         Hero hero = event.getHero();
         Skill skill = event.getSkill();
+        Subject subject = JStatsCoreAPI.getInstance().getSubjects().find(hero.getPlayer().getUniqueId());
 
         if(hero.getSkillLevel(skillProvider.getSkillIndex(skill, hero.getQuirk())) == 0){
             hero.getPlayer().sendMessage("§cVocê ainda não desbloqueou essa Skill!");
@@ -89,18 +91,19 @@ public class CustomEventListener implements Listener {
             return;
         }
 
-
-        System.out.println(heroProvider.getDataDouble(hero, "sp"));
-        System.out.println(skillProvider.getEnergyCost(skill, hero));
-        if(heroProvider.getDataDouble(hero, "sp") < skillProvider.getEnergyCost(skill, hero)){
-            hero.getPlayer().sendMessage("§cVocê não tem Energia para usar essa Skill!");
+        Attribute en = JStatsCoreAPI.getInstance().getAttributes().find("ENERGY");
+        String attr = ChatColor.stripColor(en.getName());
+        if(subject.getAttributeLevel("SP") < skillProvider.getEnergyCost(skill, hero)){
+            hero.getPlayer().sendMessage("§cVocê não tem " + attr + " para usar essa Skill!");
             return;
         }
         double energy = skillProvider.getEnergyCost(skill, hero);
 
 
         String heroName = hero.getName();
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tirarsp " + energy + " " + heroName);
+        double spn = subject.getAttributeLevel("SP");
+        double spa = spn - energy;
+        subject.setAttributeLevel("SP", spa);
         cooldownManager.applyCooldown(hero, skillProvider.getCooldown(skill, hero), skill.getName());
 
         if(skill.getType().equals("EFFECT") || skill.getType().equals("BUFF")){

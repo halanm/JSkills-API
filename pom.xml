@@ -5,15 +5,19 @@
     <artifactId>jskills</artifactId>
     <version>1.0</version>
 
-    <name>JSkills</name>
+    <name>JSkills-API</name>
 
     <scm>
-        <url>https://github.com/Rodriga0/JSkills</url>
-        <connection>scm:git:git://github.com:Rodriga0/JSkills.git</connection>
-        <developerConnection>scm:git:git@github.com:Rodriga0/JSkills.git</developerConnection>
+        <url>https://github.com/Rodriga0/JSkills-API</url>
+        <connection>scm:git:git://github.com:Rodriga0/JSkills-API.git</connection>
+        <developerConnection>scm:git:git@github.com:Rodriga0/JSkills-API.git</developerConnection>
     </scm>
 
     <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
         <repository>
             <id>spigotmc-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
@@ -46,6 +50,11 @@
             <version>6.2.2</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/libs/worldguard-bukkit-6.2.2.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.github.Rodriga0</groupId>
+            <artifactId>JStatsCore</artifactId>
+            <version>1.0</version>
         </dependency>
     </dependencies>
 

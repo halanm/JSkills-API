@@ -61,7 +61,7 @@ public class SkillProvider {
         int index = getSkillIndex(skill, hero.getQuirk());
         int level = hero.getSkillLevel(index);
         ConfigurationSection skillLevelSection = skillSection.getConfigurationSection("LVL" + level);
-        double multiplier = heroProvider.getDataInt(hero, getAttribute(skill, hero));
+        double multiplier = heroProvider.getAttributeValue(hero, getAttribute(skill, hero));
         double damage = skillLevelSection.getDouble("DMG") * multiplier;
         return damage;
     }
@@ -77,7 +77,7 @@ public class SkillProvider {
         int index = getSkillIndex(skill, hero.getQuirk());
         int level = hero.getSkillLevel(index);
         ConfigurationSection skillLevelSection = skillSection.getConfigurationSection("LVL" + level);
-        double multiplier = heroProvider.getDataInt(hero, getAttribute(skill, hero));
+        double multiplier = heroProvider.getAttributeValue(hero, getAttribute(skill, hero));
         double value = skillLevelSection.getInt("Value") * multiplier;
         return value;
     }

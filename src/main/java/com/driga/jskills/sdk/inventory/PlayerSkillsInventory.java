@@ -9,6 +9,8 @@ import com.driga.jskills.sdk.inventory.item.ItemBuilder;
 import com.driga.jskills.sdk.inventory.sustainer.InventorySustainer;
 import com.driga.jskills.sdk.provider.HeroProvider;
 import com.driga.jskills.sdk.provider.SkillProvider;
+import com.driga.jstatscore.api.JStatsCoreAPI;
+import com.driga.jstatscore.api.prototype.Subject;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -21,6 +23,7 @@ public class PlayerSkillsInventory extends InventorySustainer {
     private HeroProvider heroProvider;
     private Player player;
     private Hero hero;
+    private Subject subject;
 
     public PlayerSkillsInventory(Hero hero, String quirkName) {
         super("Individualidade - " + quirkName, MenuSize.ONE_LINE);
@@ -30,6 +33,7 @@ public class PlayerSkillsInventory extends InventorySustainer {
         this.heroProvider = HeroProvider.getInstance();
         this.player = hero.getPlayer();
         this.hero = hero;
+        this.subject = JStatsCoreAPI.getInstance().getSubjects().find(player.getUniqueId());
 
         this.render();
 
@@ -52,7 +56,7 @@ public class PlayerSkillsInventory extends InventorySustainer {
         "§bCusto: §a" + skillProvider.getUnlockCost(quirk.getSkill1(), hero) + " TP",
         "§fClique para Melhorar essa skill"),
         e ->{
-            if(heroProvider.getDataInt(hero, "tp") < skillProvider.getUnlockCost(quirk.getSkill1(), hero)){
+            if(subject.getTrainingPoints() < skillProvider.getUnlockCost(quirk.getSkill1(), hero)){
                 player.sendMessage("§cVocê não tem TP Suficiente");
                 player.closeInventory();
             }else{
@@ -76,7 +80,7 @@ public class PlayerSkillsInventory extends InventorySustainer {
         "§bCusto: §a" + skillProvider.getUnlockCost(quirk.getSkill2(), hero) + " TP",
          "§fClique para Melhorar essa skill"),
         e ->{
-            if(heroProvider.getDataInt(hero, "tp") < skillProvider.getUnlockCost(quirk.getSkill2(), hero)){
+            if(subject.getTrainingPoints() < skillProvider.getUnlockCost(quirk.getSkill2(), hero)){
                 player.sendMessage("§cVocê não tem TP Suficiente");
                 player.closeInventory();
             }else{
@@ -100,7 +104,7 @@ public class PlayerSkillsInventory extends InventorySustainer {
         "§bCusto: §a" + skillProvider.getUnlockCost(quirk.getSkill3(), hero) + " TP",
         "§fClique para Melhorar essa skill"),
         e ->{
-            if(heroProvider.getDataInt(hero, "tp") < skillProvider.getUnlockCost(quirk.getSkill3(), hero)){
+            if(subject.getTrainingPoints() < skillProvider.getUnlockCost(quirk.getSkill3(), hero)){
                 player.sendMessage("§cVocê não tem TP Suficiente");
                 player.closeInventory();
             }else{

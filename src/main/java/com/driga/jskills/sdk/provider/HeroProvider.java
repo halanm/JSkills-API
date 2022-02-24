@@ -1,7 +1,9 @@
 package com.driga.jskills.sdk.provider;
 
 import com.driga.jskills.api.prototype.Hero;
-import com.driga.jskills.sdk.stat.StatManager;
+import com.driga.jstatscore.api.JStatsCoreAPI;
+import com.driga.jstatscore.api.prototype.Subject;
+import com.driga.jstatscore.provider.SubjectProvider;
 import org.bukkit.entity.Entity;
 import org.bukkit.metadata.MetadataValue;
 
@@ -19,13 +21,9 @@ public class HeroProvider {
         return HeroProvider.heroProvider;
     }
 
-    public int getDataInt(Hero hero, String key) {
-        int value = StatManager.getInstance().getStatInt(hero, key);
-        return value;
-    }
-
-    public double getDataDouble(Hero hero, String key) {
-        double value = StatManager.getInstance().getStatDouble(hero, key);
+    public double getAttributeValue(Hero hero, String attribute) {
+        Subject subject = JStatsCoreAPI.getInstance().getSubjects().find(hero.getPlayer().getUniqueId());
+        double value = SubjectProvider.getInstance().getAttributeValue(subject, attribute);
         return value;
     }
 
