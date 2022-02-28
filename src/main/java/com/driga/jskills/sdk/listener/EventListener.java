@@ -18,6 +18,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
@@ -48,6 +49,31 @@ public class EventListener implements Listener {
         if (event.getAction().equals(Action.PHYSICAL)) {
             return;
         }
+        Player player = event.getPlayer();
+        Hero hero = heroRepository.find(player.getUniqueId());
+        if(skillProvider.getSkillByItem(player.getItemInHand(), hero) != null){
+            event.setCancelled(true);
+            Skill skill = skillProvider.getSkillByItem(player.getItemInHand(), hero);
+            new SkillUseEvent(hero, skill);
+        }
+
+        if(player.getItemInHand() == null){
+            return;
+        }
+        if(!player.getItemInHand().hasItemMeta()){
+            return;
+        }
+        if(player.getItemInHand().getItemMeta().getDisplayName() == null){
+            return;
+        }
+
+        if(player.getItemInHand().getItemMeta().getDisplayName().equals("§cSem Skill")){
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    private void onInteract(PlayerInteractEntityEvent event){
         Player player = event.getPlayer();
         Hero hero = heroRepository.find(player.getUniqueId());
         if(skillProvider.getSkillByItem(player.getItemInHand(), hero) != null){
