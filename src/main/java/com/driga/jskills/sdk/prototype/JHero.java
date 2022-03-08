@@ -80,8 +80,7 @@ public class JHero implements Hero {
         }
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "manuaddp " + name + " quirk." + quirk.toLowerCase());
 
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-                "modelapply " + quirk.toLowerCase() + " " + name.toLowerCase());
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "modelapply " + quirk.toLowerCase() + " " + name);
 
         getPlayer().sendMessage("§aVocê Recebeu a individualidade §b" + quirk);
     }

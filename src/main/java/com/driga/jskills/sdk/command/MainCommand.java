@@ -1,5 +1,6 @@
 package com.driga.jskills.sdk.command;
 
+import com.driga.jskills.sdk.inventory.PlayerSkillsInventory;
 import com.driga.jskills.sdk.inventory.QuirkListInventory;
 import com.driga.jskills.sdk.provider.SkillProvider;
 import com.driga.jskills.sdk.repository.HeroRepository;
@@ -56,6 +57,18 @@ public class MainCommand implements CommandExecutor {
                 new HeroChangeSkillLevelEvent(hero, quirk.getSkill1(), 0);
                 new HeroChangeSkillLevelEvent(hero, quirk.getSkill2(), 0);
                 new HeroChangeSkillLevelEvent(hero, quirk.getSkill3(), 0);
+                sender.sendMessage("§aAção concluida!");
+                return false;
+            }
+
+            if(args[0].equalsIgnoreCase("inv")){
+                Player player = Bukkit.getPlayer(args[1]);
+                if(player == null){
+                    sender.sendMessage("§cPlayer não encontrado");
+                    return false;
+                }
+                Hero hero = heroRepository.find(player.getUniqueId());
+                new PlayerSkillsInventory(hero, hero.getQuirk()).open(player);
                 sender.sendMessage("§aAção concluida!");
                 return false;
             }
@@ -214,6 +227,8 @@ public class MainCommand implements CommandExecutor {
                 "§6/jskills set level <Player> <Skill> <Level> §f=> Muda o level de uma skill de um player",
                 "",
                 "§6/jskills reset <Player> §f=> Seleciona uma nova Individualidade aleatória para um player e zera o level de todas as skills",
+                "",
+                "§6/jskills inv <Player> §f=> Abre o inventario de skills de um player",
                 "",
                 "§6/jskills list quirks §f=> Lista todas as Individualidades registradas",
                 "",

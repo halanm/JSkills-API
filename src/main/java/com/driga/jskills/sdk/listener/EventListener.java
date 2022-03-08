@@ -17,10 +17,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -120,7 +117,7 @@ public class EventListener implements Listener {
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                             "modelapply " + quirk.getName().toLowerCase() + " " + player.getName());
                 }
-            }.runTaskLater(JSkills.getInstance(), 10);
+            }.runTaskLater(JSkills.getInstance(), 15);
         }else{
             ItemBuilder builder = new ItemBuilder(35, 1, (byte)14);
             builder.name("§cSem Skill").lore("§cVocê ainda não tem uma individualidade");
@@ -138,7 +135,7 @@ public class EventListener implements Listener {
 
         Player player = event.getPlayer();
         ItemStack drop = event.getItemDrop().getItemStack();
-        Hero hero = heroFactory.find(player);
+        Hero hero = heroRepository.find(player.getUniqueId());
 
         if(drop.getItemMeta().getDisplayName().equals("§cSem Skill") || skillProvider.getSkillByItem(drop, hero) != null){
             event.setCancelled(true);
@@ -157,7 +154,7 @@ public class EventListener implements Listener {
 
         Player player = (Player) event.getWhoClicked();
         ItemStack item = event.getCurrentItem();
-        Hero hero = heroFactory.find(player);
+        Hero hero = heroRepository.find(player.getUniqueId());
 
         if(item == null){
             return;
@@ -172,5 +169,10 @@ public class EventListener implements Listener {
         if(item.getItemMeta().getDisplayName().equals("§cSem Skill") || skillProvider.getSkillByItem(item, hero) != null){
             event.setCancelled(true);
         }
+    }
+
+    @EventHandler
+    public void onSwap(PlayerSwapHandItemsEvent e){
+        e.setCancelled(true);
     }
 }
